@@ -1,36 +1,22 @@
 const express = require('express');
 const app = express();
 
+const client = require('./db/postgres-client');
+
+// This is a "body parser" to tell express that we will data from a FORM!!!!
+app.use(express.urlencoded({ extended: false }));
+
+// This is a "body parser" to tell express that we expect JSON to be on our body
+app.use(express.json());
+
+// App.use will run the "required" routes whenever a request comes in with the prefix "users"
+// localhost:8080/users
+// localhost:8080/dogs
+app.use('/users', require('./api/users'));
+app.use('/dogs', require('./api/dogs'))
+
 app.get('/', (req, res, next) => {
   res.send('<h1>Welcome to the Home Page!</h1>');
-});
-
-app.get('/users/', (req, res, next) => {
-  res.send('<h1>Welcome to the All Users Page!</h1>');
-});
-
-app.get('/users/:id', (req, res, next) => {
-  res.send('<h1>Welcome to the Single Users Page!</h1>');
-});
-
-app.post('/users/', (req, res, next) => {
-  res.json('You tried to create a user');
-});
-
-app.put('/users/:id', (req, res, next) => {
-  res.json('You tried to update a user');
-});
-
-app.delete('/users/:id', (req, res, next) => {
-  res.json('You tried to delete a user');
-});
-
-app.get('/dogs/', (req, res, next) => {
-  res.send('<h1>Welcome to the All Dogs Page!</h1>');
-});
-
-app.get('/dogs/:id', (req, res, next) => {
-  res.send('<h1>Welcome to the Single Dog Page!</h1>');
 });
 
 // What is this????
