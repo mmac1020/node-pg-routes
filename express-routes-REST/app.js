@@ -1,44 +1,44 @@
 const express = require('express');
 const app = express();
 
+// This is for receiving form data via POST request body
+app.use(express.urlencoded({extended: false}))
+
+// This is for receiving JSON data via POST/PUT request body
+app.use(express.json());
+
+app.use((req, res, next) => {
+  req.user = {name: 'mac'}
+  // req.body;
+  next();
+})
+
 app.get('/', (req, res, next) => {
+  console.log(req.user);
   res.send('<h1>Welcome to the Home Page!</h1>');
 });
 
-app.get('/users/', (req, res, next) => {
-  res.send('<h1>Welcome to the All Users Page!</h1>');
-});
+// Require always looks for an index.js by default
+const router = require('./api');
 
-app.get('/users/:id', (req, res, next) => {
-  res.send('<h1>Welcome to the Single Users Page!</h1>');
-});
+// const router = require('./api/index');
 
-app.post('/users/', (req, res, next) => {
-  res.json('You tried to create a user');
-});
+// app.use('/api', router);
 
-app.put('/users/:id', (req, res, next) => {
-  res.json('You tried to update a user');
-});
+app.use('/api', require('./api'));
 
-app.delete('/users/:id', (req, res, next) => {
-  res.json('You tried to delete a user');
-});
 
-app.get('/dogs/', (req, res, next) => {
-  res.send('<h1>Welcome to the All Dogs Page!</h1>');
-});
 
-app.get('/dogs/:id', (req, res, next) => {
-  res.send('<h1>Welcome to the Single Dog Page!</h1>');
-});
+
 
 // What is this????
+// This is a 404 handler
 app.use((req, res, next) => {
   res.status(404).send('<h1> I do not have a mapping for this route :|</h1>');
 });
 
 // And what is this???
+// This is a custom error handler
 app.use((err, req, res, next) => {
   console.log(err.stack);
   res.status(err.status || 500).send(err.message);
