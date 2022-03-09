@@ -36,8 +36,8 @@ const main = async (data) => {
   prompt();
 };
 
-function start() {
-  client.connect();
+async function start() {
+  await client.connect();
   prompt();
   process.stdin.on('data', main);
 }
