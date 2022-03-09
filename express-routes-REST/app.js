@@ -1,41 +1,25 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
+const routes = require('./api')
 
-app.get('/', (req, res, next) => {
-  res.send('<h1>Welcome to the Home Page!</h1>');
-});
+// Parsing Forms
+app.use(express.urlencoded({extended: false}))
 
-app.get('/users/', (req, res, next) => {
-  res.send('<h1>Welcome to the All Users Page!</h1>');
-});
+// Parsing JSON
+app.use(express.json());
 
-app.get('/users/:id', (req, res, next) => {
-  res.send('<h1>Welcome to the Single Users Page!</h1>');
-});
+app.use(morgan('dev'));
 
-app.post('/users/', (req, res, next) => {
-  res.json('You tried to create a user');
-});
-
-app.put('/users/:id', (req, res, next) => {
-  res.json('You tried to update a user');
-});
-
-app.delete('/users/:id', (req, res, next) => {
-  res.json('You tried to delete a user');
-});
-
-app.get('/dogs/', (req, res, next) => {
-  res.send('<h1>Welcome to the All Dogs Page!</h1>');
-});
-
-app.get('/dogs/:id', (req, res, next) => {
-  res.send('<h1>Welcome to the Single Dog Page!</h1>');
-});
+app.use(routes);
 
 // What is this????
 app.use((req, res, next) => {
-  res.status(404).send('<h1> I do not have a mapping for this route :|</h1>');
+  try {
+    res.status(404).send('<h1> I do not have a mapping for this route :|</h1>');
+  } catch (err) {
+    next(err);
+  }
 });
 
 // And what is this???
